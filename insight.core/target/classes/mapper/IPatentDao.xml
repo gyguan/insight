@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onethird.insight.core.web.dao.IPatentDao">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="PatentResultMap" type="com.onethird.insight.core.web.entity.PatentBean">
+		<id column="id" property="id" />
+		<result column="application_no" property="applicationNo" />
+		<result column="application_date" property="applicationDate" />
+		<result column="inventor" property="inventor" />
+		<result column="ipc" property="ipc" />
+		<association property="extendData" javaType = "java.util.Map">
+			<result column="name" property="companyName"/>
+		</association>
+	</resultMap>
+	
+	<select id="getPatentInfoByCompanyId" resultMap = "PatentResultMap">
+		SELECT
+			t1.application_no,
+			t1.application_date,
+			t1.inventor,
+			t1.ipc,
+			t2.name
+		FROM
+			patent t1
+		INNER JOIN company t2 ON t1.company_id = t2.id
+		AND t1.company_id = #{companyId, jdbcType=DECIMAL}
+	</select>
+
+</mapper>
